@@ -1,3 +1,7 @@
+variable "aws_profile" {
+  description = "Default profile for AWS access"
+  default     = "default"
+}
 variable "aws_region" {
   description = "Default region for AWS resources"
   default     = "us-east-1"
