@@ -2,13 +2,18 @@ data "aws_ec2_instance_type" "app_server" {
   instance_type = var.instance_type
 }
 
-data "aws_ami" "amazon_linux_2_ami" {
-  owners      = ["amazon"]
+data "aws_ami" "ubuntu_lts" {
+  owners      = ["099720109477"] # Canonical
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
 
   filter {
@@ -23,7 +28,7 @@ resource "aws_key_pair" "ssh_login" {
 }
 
 resource "aws_instance" "app_server" {
-  ami                         = data.aws_ami.amazon_linux_2_ami.id
+  ami                         = data.aws_ami.ubuntu_lts.id
   instance_type               = var.instance_type
   subnet_id                   = aws_subnet.subnet_public.id
   vpc_security_group_ids      = [aws_security_group.security_group.id]
