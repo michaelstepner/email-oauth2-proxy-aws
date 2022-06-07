@@ -20,8 +20,8 @@ runcmd:
   - sudo -u ubuntu git clone --depth 1 --branch ${email_oauth2_proxy_version} https://github.com/simonrob/email-oauth2-proxy.git /home/ubuntu/email-oauth2-proxy
   - sudo -u ubuntu python3 -m pip install -r /home/ubuntu/email-oauth2-proxy/requirements.txt
   # Configure email-oauth2-proxy
-  - sudo mv /tmp/personal.config /home/ubuntu/email-oauth2-proxy/personal.config
-  - sudo chown ubuntu:ubuntu /home/ubuntu/email-oauth2-proxy/personal.config
+  - mv /tmp/personal.config /home/ubuntu/email-oauth2-proxy/personal.config
+  - chown ubuntu:ubuntu /home/ubuntu/email-oauth2-proxy/personal.config
   - sudo -u ubuntu sed -i "s/{{private_ip}}/$(hostname -I)/g" /home/ubuntu/email-oauth2-proxy/personal.config
   # Command to run:
   #  ssh -L 8080:127.0.0.1:8080 ubuntu@<PUBLIC_IP>
