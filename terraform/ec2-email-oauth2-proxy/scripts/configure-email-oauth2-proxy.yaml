@@ -1,0 +1,29 @@
+#cloud-config
+
+# Install packages via apt-get
+packages:
+  - python3-pip
+  - gir1.2-ayatanaappindicator3-0.1
+
+# Write out config file for email-oauth2-proxy
+write_files:
+  - path: /tmp/personal.config
+    encoding: base64
+    content: ${base64encode(email_oauth2_proxy_config)}
+    permissions: '0640'
+
+# Run commands
+runcmd:
+  # Configure timezone (which will be used in email-oauth2-proxy log's timestamps)
+  - timedatectl set-timezone ${timezone}
+  # Install email-oauth2-proxy
+  - sudo -u ubuntu git clone --depth 1 --branch ${email_oauth2_proxy_version} https://github.com/simonrob/email-oauth2-proxy.git /home/ubuntu/email-oauth2-proxy
+  - sudo -u ubuntu python3 -m pip install -r /home/ubuntu/email-oauth2-proxy/requirements.txt
+  # Configure email-oauth2-proxy
+  - sudo mv /tmp/personal.config /home/ubuntu/email-oauth2-proxy/personal.config
+  - sudo chown ubuntu:ubuntu /home/ubuntu/email-oauth2-proxy/personal.config
+  - sudo -u ubuntu sed -i "s/{{private_ip}}/$(hostname -I)/g" /home/ubuntu/email-oauth2-proxy/personal.config
+  # Command to run:
+  #  ssh -L 8080:127.0.0.1:8080 ubuntu@<PUBLIC_IP>
+  #     tmux
+  #     python3 /home/ubuntu/email-oauth2-proxy/emailproxy.py --no-gui --local-server-auth --config-file /home/ubuntu/email-oauth2-proxy/personal.config

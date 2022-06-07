@@ -1,3 +1,7 @@
+#-------------------------------------------------------------------------------
+# Infrastructure configuration
+#-------------------------------------------------------------------------------
+
 variable "aws_profile" {
   description = "Default profile for AWS access"
   default     = "default"
@@ -16,7 +20,7 @@ variable "instance_type" {
   default     = "t4g.nano"
 }
 variable "instance_name" {
-  description = "Name of EC2 instance"
+  description = "Name of AWS resources"
   default     = "email-oauth2-proxy"
 }
 variable "volume_size" {
@@ -28,4 +32,20 @@ variable "ssh_public_key" {
 }
 variable "smtp_allow_list" {
   description = "List of IPs allowed to access SMTP server"
+}
+
+#-------------------------------------------------------------------------------
+# Server configuration
+#-------------------------------------------------------------------------------
+
+variable "timezone" {
+  description = "Timezone to set as default on server"
+  default     = "UTC"
+}
+variable "email_oauth2_proxy_version" {
+  description = "Branch or tag name to checkout from simonrob/email-oauth2-proxy Github repo"
+  default     = "main"
+}
+variable "email_oauth2_proxy_config" {
+  description = "Config file for email-oauth2-proxy to be stored as personal.config"
 }
