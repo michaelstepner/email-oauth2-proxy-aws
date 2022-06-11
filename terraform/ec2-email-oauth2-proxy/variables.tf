@@ -25,7 +25,7 @@ variable "instance_name" {
 }
 variable "volume_size" {
   description = "Space in GB on EC2 instance root volume"
-  default     = "8"
+  default     = "2"
 }
 variable "ssh_public_key" {
   description = "Public key with SSH access to the EC2 instance"

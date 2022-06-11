@@ -1,9 +1,11 @@
 #cloud-config
 
-# Install packages via apt-get
+# Install packages
 packages:
+  - nano
+  - tmux
+  - git
   - python3-pip
-  - gir1.2-ayatanaappindicator3-0.1
 
 # Write out config file for email-oauth2-proxy
 write_files:
@@ -15,15 +17,17 @@ write_files:
 # Run commands
 runcmd:
   # Configure timezone (which will be used in email-oauth2-proxy log's timestamps)
+  - rm /etc/localtime
   - timedatectl set-timezone ${timezone}
   # Install email-oauth2-proxy
-  - sudo -u ubuntu git clone --depth 1 --branch ${email_oauth2_proxy_version} https://github.com/simonrob/email-oauth2-proxy.git /home/ubuntu/email-oauth2-proxy
-  - sudo -u ubuntu python3 -m pip install -r /home/ubuntu/email-oauth2-proxy/requirements.txt
+  - sudo -u ec2-user git clone --depth 1 --branch ${email_oauth2_proxy_version} https://github.com/simonrob/email-oauth2-proxy.git /home/ec2-user/email-oauth2-proxy
+  - sudo -u ec2-user sed -i 's/^pystray$/pystray==0.18.0/g' /home/ec2-user/email-oauth2-proxy/requirements.txt
+  - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements.txt
   # Configure email-oauth2-proxy
-  - mv /tmp/personal.config /home/ubuntu/email-oauth2-proxy/personal.config
-  - chown ubuntu:ubuntu /home/ubuntu/email-oauth2-proxy/personal.config
-  - sudo -u ubuntu sed -i "s/{{private_ip}}/$(hostname -I)/g" /home/ubuntu/email-oauth2-proxy/personal.config
+  - mv /tmp/personal.config /home/ec2-user/email-oauth2-proxy/personal.config
+  - sed -i "s/{{private_ip}}/$(hostname -I)/g" /home/ec2-user/email-oauth2-proxy/personal.config
+  - chown ec2-user:ec2-user /home/ec2-user/email-oauth2-proxy/personal.config
   # Command to run:
-  #  ssh -L 8080:127.0.0.1:8080 ubuntu@<PUBLIC_IP>
+  #  ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP>
   #     tmux
-  #     python3 /home/ubuntu/email-oauth2-proxy/emailproxy.py --no-gui --local-server-auth --config-file /home/ubuntu/email-oauth2-proxy/personal.config
+  #     PYSTRAY_BACKEND=dummy python3 /home/ec2-user/email-oauth2-proxy/emailproxy.py --no-gui --local-server-auth --config-file /home/ec2-user/email-oauth2-proxy/personal.config
