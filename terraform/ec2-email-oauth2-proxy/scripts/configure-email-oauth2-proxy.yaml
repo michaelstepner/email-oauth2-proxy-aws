@@ -13,6 +13,14 @@ write_files:
     encoding: base64
     content: ${base64encode(email_oauth2_proxy_config)}
     permissions: '0640'
+  - path: /tmp/fullchain.pem
+    encoding: base64
+    content: ${base64encode(cert_fullchain)}
+    permissions: '0640'
+  - path: /tmp/privkey.pem
+    encoding: base64
+    content: ${base64encode(cert_privkey)}
+    permissions: '0640'
 
 # Run commands
 runcmd:
@@ -25,8 +33,12 @@ runcmd:
   - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements.txt
   # Configure email-oauth2-proxy
   - mv /tmp/personal.config /home/ec2-user/email-oauth2-proxy/personal.config
+  - mv /tmp/fullchain.pem /home/ec2-user/email-oauth2-proxy/fullchain.pem
+  - mv /tmp/privkey.pem /home/ec2-user/email-oauth2-proxy/privkey.pem
   - sed -i "s/{{private_ip}}/$(hostname -I)/g" /home/ec2-user/email-oauth2-proxy/personal.config
   - chown ec2-user:ec2-user /home/ec2-user/email-oauth2-proxy/personal.config
+  - chown root:ec2-user /home/ec2-user/email-oauth2-proxy/fullchain.pem
+  - chown root:ec2-user /home/ec2-user/email-oauth2-proxy/privkey.pem
   # Command to run:
   #  ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP>
   #     tmux

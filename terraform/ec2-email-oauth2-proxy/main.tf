@@ -79,7 +79,7 @@ resource "aws_key_pair" "ssh_login" {
 
 resource "aws_eip" "app_server" {
   instance = aws_instance.app_server.id
-  vpc = true
+  vpc      = true
 }
 
 resource "aws_instance" "app_server" {
@@ -103,6 +103,8 @@ resource "aws_instance" "app_server" {
       timezone                   = var.timezone
       email_oauth2_proxy_version = var.email_oauth2_proxy_version
       email_oauth2_proxy_config  = var.email_oauth2_proxy_config
+      cert_fullchain             = "${acme_certificate.certificate.certificate_pem}${acme_certificate.certificate.issuer_pem}"
+      cert_privkey               = acme_certificate.certificate.private_key_pem
     }
   )
   user_data_replace_on_change = true
