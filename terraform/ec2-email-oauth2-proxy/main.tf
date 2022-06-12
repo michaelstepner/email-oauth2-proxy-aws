@@ -3,7 +3,19 @@
 #-------------------------------------------------------------------------------
 
 resource "aws_route53domains_registered_domain" "domain" {
-  domain_name = var.domain_name
+  domain_name = var.domain_base_name
+}
+
+resource "aws_route53_zone" "primary" {
+  name = var.domain_base_name
+}
+
+resource "aws_route53_record" "app_server" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = var.domain_full_name
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.app_server.public_ip]
 }
 
 #-------------------------------------------------------------------------------
@@ -21,8 +33,8 @@ resource "acme_registration" "reg" {
 
 resource "acme_certificate" "certificate" {
   account_key_pem           = acme_registration.reg.account_key_pem
-  common_name               = var.domain_name
-  subject_alternative_names = ["*.${var.domain_name}"]
+  common_name               = aws_route53domains_registered_domain.domain.domain_name
+  subject_alternative_names = ["*.${aws_route53domains_registered_domain.domain.domain_name}"]
 
   dns_challenge {
     provider = "route53"
@@ -63,6 +75,11 @@ data "aws_ami" "app_server" {
 resource "aws_key_pair" "ssh_login" {
   key_name   = var.instance_name
   public_key = var.ssh_public_key
+}
+
+resource "aws_eip" "app_server" {
+  instance = aws_instance.app_server.id
+  vpc = true
 }
 
 resource "aws_instance" "app_server" {

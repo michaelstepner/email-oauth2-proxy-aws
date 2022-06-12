@@ -6,6 +6,7 @@ Automated AWS hosting for simonrob/email-oauth2-proxy
 1. Manually [register a domain using AWS Route 53](https://us-east-1.console.aws.amazon.com/route53/home#DomainRegistration).
     * As of 2022-06-11, the cheapest TLD is .click at $3/year but it has no WHOIS privacy protection.
     * As of 2022-06-11, the second-cheapest TLD is .link at $5/year **and it has WHOIS privacy protection**.
+    * XX if you automatically create a Route 53 zone, you will need to import it into Terraform...I think. Not fully tested.
 
 ## To Do
 

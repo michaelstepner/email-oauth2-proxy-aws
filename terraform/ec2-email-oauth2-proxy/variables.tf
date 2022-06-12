@@ -38,8 +38,11 @@ variable "smtp_allow_list" {
 # Domain configuration
 #-------------------------------------------------------------------------------
 
-variable "domain_name" {
+variable "domain_base_name" {
   description = "Domain name that is already registered with AWS"
+}
+variable "domain_full_name" {
+  description = "Subdomain that will route to email-oauth2-proxy server"
 }
 
 #-------------------------------------------------------------------------------
