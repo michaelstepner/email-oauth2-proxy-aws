@@ -6,6 +6,7 @@ packages:
   - tmux
   - git
   - python3-pip
+  - iptables
 
 # Write out config file for email-oauth2-proxy
 write_files:
@@ -27,6 +28,8 @@ runcmd:
   # Configure timezone (which will be used in email-oauth2-proxy log's timestamps)
   - rm /etc/localtime
   - timedatectl set-timezone ${timezone}
+  # Redirect port 465 to port 1465, since only root can host on ports < 1024
+  - iptables -A PREROUTING -t nat -p tcp --dport 465 -j REDIRECT --to-port 1465
   # Install email-oauth2-proxy
   - sudo -u ec2-user git clone --depth 1 --branch ${email_oauth2_proxy_version} https://github.com/simonrob/email-oauth2-proxy.git /home/ec2-user/email-oauth2-proxy
   - sudo -u ec2-user sed -i 's/^pystray$/pystray==0.18.0/g' /home/ec2-user/email-oauth2-proxy/requirements.txt

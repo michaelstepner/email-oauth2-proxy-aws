@@ -61,8 +61,8 @@ resource "aws_security_group" "security_group" {
 
   # SMTP access from the allowlisted IPs
   ingress {
-    from_port   = 1587
-    to_port     = 1587
+    from_port   = 465
+    to_port     = 465
     protocol    = "tcp"
     cidr_blocks = var.smtp_allow_list
   }
