@@ -3,25 +3,25 @@
 #-------------------------------------------------------------------------------
 
 variable "aws_profile" {
-  description = "Default profile for AWS access"
+  description = "Profile for AWS access"
   default     = "default"
 }
 variable "aws_region" {
-  description = "Default region for AWS resources"
+  description = "Region for AWS resources"
   default     = "us-east-1"
 }
 variable "aws_availability_zone" {
-  description = "Default availability zone for AWS resources"
+  description = "Availability zone for AWS resources"
   # Note: instance type (t4g.nano) is supported in us-east-1a, us-east-1b, us-east-1c, us-east-1d, us-east-1f.
   default = "us-east-1a"
+}
+variable "aws_resource_name" {
+  description = "Name of AWS resources"
+  default     = "email-oauth2-proxy"
 }
 variable "instance_type" {
   description = "Type of EC2 instance"
   default     = "t4g.nano"
-}
-variable "instance_name" {
-  description = "Name of AWS resources"
-  default     = "email-oauth2-proxy"
 }
 variable "volume_size" {
   description = "Space in GB on EC2 instance root volume"

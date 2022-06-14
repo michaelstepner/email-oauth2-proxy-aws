@@ -12,7 +12,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
-    Name = var.instance_name
+    Name = var.aws_resource_name
   }
 }
 
@@ -27,7 +27,7 @@ resource "aws_subnet" "subnet_public" {
   availability_zone       = var.aws_availability_zone
   map_public_ip_on_launch = true
   tags = {
-    Name = var.instance_name
+    Name = var.aws_resource_name
   }
 }
 

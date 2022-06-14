@@ -73,7 +73,7 @@ data "aws_ami" "app_server" {
 #-------------------------------------------------------------------------------
 
 resource "aws_key_pair" "ssh_login" {
-  key_name   = var.instance_name
+  key_name   = var.aws_resource_name
   public_key = var.ssh_public_key
 }
 
@@ -93,7 +93,7 @@ resource "aws_instance" "app_server" {
     volume_size = var.volume_size
     volume_type = "gp3"
     tags = {
-      Name = var.instance_name
+      Name = var.aws_resource_name
     }
   }
 
@@ -110,6 +110,6 @@ resource "aws_instance" "app_server" {
   user_data_replace_on_change = true
 
   tags = {
-    Name = var.instance_name
+    Name = var.aws_resource_name
   }
 }
