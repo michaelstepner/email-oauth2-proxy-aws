@@ -98,7 +98,7 @@ resource "aws_instance" "app_server" {
   }
 
   user_data = templatefile(
-    "scripts/configure-email-oauth2-proxy.yaml",
+    "server-cloud-config.yaml",
     {
       timezone                   = var.timezone
       email_oauth2_proxy_version = var.email_oauth2_proxy_version
