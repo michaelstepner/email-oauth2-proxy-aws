@@ -44,11 +44,11 @@ I am paying ***approximately US$4.15 per month***, based on the prices I observe
 5. Using a terminal, navigate to the `terraform` subdirectory of this repo and run the following commands, replacing ALL_CAPS values with your own:
 ```
 terraform init
-terraform import -var-file=YOUR_CONFIG.tf aws_route53_zone.primary ZONE_ID_FROM_STEP_2
+terraform import -var-file=YOUR_CONFIG.tfvars aws_route53_zone.primary ZONE_ID_FROM_STEP_2
 ```
 6. You are now ready to create the AWS server. Using a terminal, in the `terraform` subdirectory of this repo, run the following command. Terraform will prompt you to review the resources that will be created, then type `yes` to confirm.
 ```
-terraform apply -var-file=YOUR_CONFIG.tf
+terraform apply -var-file=YOUR_CONFIG.tfvars
 ```
 7. Using a terminal on your local computer, run `ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP OR DOMAIN_FULL_NAME>`
    * This will connect to the email-oauth2-proxy server, while also forwarding its port 8080 to your local computer for OAuth2 authentication purposes.
