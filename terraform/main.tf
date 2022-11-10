@@ -72,6 +72,10 @@ data "aws_ami" "app_server" {
 # Configure EC2 instance
 #-------------------------------------------------------------------------------
 
+resource "tls_private_key" "ssh_host_ed25519_key" {
+  algorithm = "ED25519"
+}
+
 resource "aws_key_pair" "ssh_login" {
   key_name   = var.aws_resource_name
   public_key = var.ssh_public_key
@@ -105,6 +109,8 @@ resource "aws_instance" "app_server" {
       email_oauth2_proxy_config  = var.email_oauth2_proxy_config
       cert_fullchain             = "${acme_certificate.certificate.certificate_pem}${acme_certificate.certificate.issuer_pem}"
       cert_privkey               = acme_certificate.certificate.private_key_pem
+      ssh_host_ed25519_privkey   = tls_private_key.ssh_host_ed25519_key.private_key_openssh
+      ssh_host_ed25519_pubkey    = tls_private_key.ssh_host_ed25519_key.public_key_openssh
     }
   )
   user_data_replace_on_change = true
