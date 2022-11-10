@@ -70,7 +70,7 @@ YYYY-MM-DD HH:MM:SS: Please visit the following URL to authenticate account your
 ```
 11. After you've completed the authentication prompts in your local browser, you should see the successful authentication appear in the email-oauth2-proxy server log via your SSH session. It will look like the text below. At this point you can close your local browser tab. Your email client should be able to successfully connect to the SMTP server and send outgoing emails. 
 ```
-YYYY-MM-DD HH:MM:SS: SMTP ('1.2.3.4', 5678) [ Successfully authenticated SMTP connection - removing proxy ]
+YYYY-MM-DD HH:MM:SS: SMTP ('1.2.3.4', 5678) [ Successfully authenticated SMTP connection - releasing session ]
 ```
 12. In your terminal connected to the remote server, leave the email-oauth2-proxy server running while detaching from the tmux session by typing `Ctrl`+`b` then `d`. You can now log out of the remote server. It will continue running the email-oauth2-proxy server in the background.
 
