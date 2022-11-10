@@ -32,8 +32,7 @@ runcmd:
   - iptables -A PREROUTING -t nat -p tcp --dport 465 -j REDIRECT --to-port 1465
   # Install email-oauth2-proxy
   - sudo -u ec2-user git clone --depth 1 --branch ${email_oauth2_proxy_version} https://github.com/simonrob/email-oauth2-proxy.git /home/ec2-user/email-oauth2-proxy
-  - sudo -u ec2-user sed -i 's/^pystray$/pystray==0.18.0/g' /home/ec2-user/email-oauth2-proxy/requirements.txt
-  - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements.txt
+  - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements-no-gui.txt
   # Configure email-oauth2-proxy
   - mv /tmp/personal.config /home/ec2-user/email-oauth2-proxy/personal.config
   - mv /tmp/fullchain.pem /home/ec2-user/email-oauth2-proxy/fullchain.pem
