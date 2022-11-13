@@ -19,6 +19,42 @@ resource "aws_route53_record" "app_server" {
 }
 
 #-------------------------------------------------------------------------------
+# AWS Secrets Management
+#-------------------------------------------------------------------------------
+
+resource "aws_secretsmanager_secret" "oauth2_tokens" {
+  name                    = "email_oauth2_proxy_tokens"
+  recovery_window_in_days = 7
+}
+
+resource "aws_iam_user" "user_email_oauth2_proxy" {
+  name = "email_oauth2_proxy"
+}
+
+resource "aws_iam_access_key" "user_email_oauth2_proxy" {
+  user = aws_iam_user.user_email_oauth2_proxy.name
+}
+
+resource "aws_iam_user_policy" "oauth2_tokens_readwrite" {
+  name = "email_oauth2_tokens_readwrite"
+  user = aws_iam_user.user_email_oauth2_proxy.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:PutSecretValue",
+        ]
+        Resource = aws_secretsmanager_secret.oauth2_tokens.arn
+      },
+    ]
+  })
+}
+
+#-------------------------------------------------------------------------------
 # Let's Encrypt Certificate
 #-------------------------------------------------------------------------------
 
