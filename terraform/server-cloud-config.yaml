@@ -44,6 +44,7 @@ runcmd:
   - mv /tmp/fullchain.pem /home/ec2-user/email-oauth2-proxy/fullchain.pem
   - mv /tmp/privkey.pem /home/ec2-user/email-oauth2-proxy/privkey.pem
   - sed -i "s/{{private_ip}}/$(hostname -I)/g" /home/ec2-user/email-oauth2-proxy/personal.config
+  - sed -i "s/{{aws_secret_arn}}/${email_oauth2_aws_secret_arn}/g" /home/ec2-user/email-oauth2-proxy/personal.config
   - chown ec2-user:ec2-user /home/ec2-user/email-oauth2-proxy/personal.config
   - chown root:ec2-user /home/ec2-user/email-oauth2-proxy/fullchain.pem
   - chown root:ec2-user /home/ec2-user/email-oauth2-proxy/privkey.pem
