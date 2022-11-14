@@ -147,6 +147,9 @@ resource "aws_instance" "app_server" {
       cert_privkey               = acme_certificate.certificate.private_key_pem
       ssh_host_ed25519_privkey   = tls_private_key.ssh_host_ed25519_key.private_key_openssh
       ssh_host_ed25519_pubkey    = tls_private_key.ssh_host_ed25519_key.public_key_openssh
+      aws_access_key_id          = aws_iam_access_key.user_email_oauth2_proxy.id
+      aws_secret_access_key      = aws_iam_access_key.user_email_oauth2_proxy.secret
+      aws_region                 = var.aws_region
     }
   )
   user_data_replace_on_change = true
