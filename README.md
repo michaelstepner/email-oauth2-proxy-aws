@@ -16,13 +16,14 @@ For more information about the Email OAuth 2.0 Proxy, see the README in [simonro
 
 **THIS SOFTWARE COMES WITH NO WARRANTY OR GUARANTEE REGARDING THE PRICE OF YOUR CLOUD USAGE.** The price you face is determined by AWS, and may be higher or lower depending on your Free Tier availability, email client settings, pricing changes by Amazon, etc.
 
-I am paying ***approximately US$4.15 per month***, based on the prices I observed for my own usage in June 2022:
+I am paying ***approximately US$4.45 per month***, based on the prices I observed for my own usage in June 2022:
 * $5/year paid upfront for a .link domain registered on Route 53
    * As of 2022-06-11, the cheapest TLD is .click at $3/year *but it has no WHOIS privacy protection*.
    * As of 2022-06-11, the second-cheapest TLD is .link at $5/year **and it has WHOIS privacy protection**.
 * $0.50/month for a Route 53 hosted zone
 * $3.07/month for a t4g EC2 instance (cheapest instance type)
 * $0.16/month for a 2GB EBS volume
+* $0.40/month for one secret in AWS Secrets Manager
 
 ## Installation
 
