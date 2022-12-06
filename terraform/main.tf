@@ -141,6 +141,7 @@ resource "aws_instance" "app_server" {
     "server-cloud-config.yaml",
     {
       timezone                    = var.timezone
+      email_oauth2_proxy_repo     = var.email_oauth2_proxy_repo
       email_oauth2_proxy_version  = var.email_oauth2_proxy_version
       email_oauth2_proxy_config   = var.email_oauth2_proxy_config
       email_oauth2_aws_secret_arn = aws_secretsmanager_secret.oauth2_tokens.arn

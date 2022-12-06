@@ -12,7 +12,7 @@ variable "aws_region" {
 }
 variable "aws_availability_zone" {
   description = "Availability zone for AWS resources"
-  # Note: instance type (t4g.nano) is supported in us-east-1a, us-east-1b, us-east-1c, us-east-1d, us-east-1f.
+  # Note: instance type t4g.nano is supported in us-east-1a, us-east-1b, us-east-1c, us-east-1d, us-east-1f.
   default = "us-east-1a"
 }
 variable "aws_resource_name" {
@@ -53,8 +53,12 @@ variable "timezone" {
   description = "Timezone to set as default on server"
   default     = "UTC"
 }
+variable "email_oauth2_proxy_repo" {
+  description = "Git repository to clone containing emailproxy.py"
+  default     = "https://github.com/simonrob/email-oauth2-proxy.git"
+}
 variable "email_oauth2_proxy_version" {
-  description = "Branch or tag name to checkout from simonrob/email-oauth2-proxy Github repo"
+  description = "Branch or tag name to checkout from email_oauth2_proxy_repo"
   default     = "main"
 }
 variable "email_oauth2_proxy_config" {

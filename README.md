@@ -57,7 +57,7 @@ terraform apply -var-file=YOUR_CONFIG.tfvars
 ```
 tmux
 cd email-oauth2-proxy/
-PYSTRAY_BACKEND=dummy python3 emailproxy.py --no-gui --local-server-auth --config-file personal.config
+python3 emailproxy.py --no-gui --local-server-auth --aws-secrets --config-file personal.config
 ```
 9. In your email client, configure SMTP using the server settings:
    * Outgoing SMTP server: `DOMAIN_FULL_NAME`
