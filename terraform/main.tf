@@ -22,11 +22,6 @@ resource "aws_route53_record" "app_server" {
 # AWS Secrets Management
 #-------------------------------------------------------------------------------
 
-resource "aws_secretsmanager_secret" "oauth2_tokens" {
-  name                    = "email_oauth2_proxy_tokens"
-  recovery_window_in_days = 0
-}
-
 resource "aws_iam_user" "user_email_oauth2_proxy" {
   name = "email_oauth2_proxy"
 }
