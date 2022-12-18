@@ -43,7 +43,7 @@ resource "aws_iam_user_policy" "oauth2_tokens_readwrite" {
           "secretsmanager:GetSecretValue",
           "secretsmanager:PutSecretValue",
         ]
-        Resource = aws_secretsmanager_secret.oauth2_tokens.arn
+        Resource = "*"
       },
     ]
   })
@@ -139,7 +139,7 @@ resource "aws_instance" "app_server" {
       email_oauth2_proxy_repo     = var.email_oauth2_proxy_repo
       email_oauth2_proxy_version  = var.email_oauth2_proxy_version
       email_oauth2_proxy_config   = var.email_oauth2_proxy_config
-      email_oauth2_aws_secret_arn = aws_secretsmanager_secret.oauth2_tokens.arn
+      email_oauth2_aws_secret_arn = ""
       cert_fullchain              = "${acme_certificate.certificate.certificate_pem}${acme_certificate.certificate.issuer_pem}"
       cert_privkey                = acme_certificate.certificate.private_key_pem
       ssh_host_ed25519_privkey    = tls_private_key.ssh_host_ed25519_key.private_key_openssh
