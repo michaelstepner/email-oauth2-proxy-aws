@@ -42,6 +42,7 @@ resource "aws_iam_user_policy" "oauth2_tokens_readwrite" {
         Action = [
           "secretsmanager:GetSecretValue",
           "secretsmanager:PutSecretValue",
+          "secretsmanager:CreateSecret",
         ]
         Resource = "*"
       },
