@@ -39,7 +39,7 @@ runcmd:
   # Install email-oauth2-proxy
   - sudo -u ec2-user git clone --depth 1 --branch ${email_oauth2_proxy_version} ${email_oauth2_proxy_repo} /home/ec2-user/email-oauth2-proxy
   - sudo -u ec2-user rm -rf /home/ec2-user/email-oauth2-proxy/.git
-  - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements-no-gui.txt -r /home/ec2-user/email-oauth2-proxy/requirements-aws-secrets.txt
+  - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements-aws-secrets.txt
   # Configure email-oauth2-proxy
   - mv /tmp/personal.config /home/ec2-user/email-oauth2-proxy/personal.config
   - mv /tmp/fullchain.pem /home/ec2-user/email-oauth2-proxy/fullchain.pem
@@ -67,7 +67,3 @@ runcmd:
     region = ${aws_region}
     EOL
   - chown -R ec2-user:ec2-user /home/ec2-user/.aws/
-  # Command to run:
-  #  ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP>
-  #     tmux
-  #     PYSTRAY_BACKEND=dummy python3 /home/ec2-user/email-oauth2-proxy/emailproxy.py --no-gui --local-server-auth --config-file /home/ec2-user/email-oauth2-proxy/personal.config
