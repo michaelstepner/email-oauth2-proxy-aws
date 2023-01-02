@@ -18,8 +18,8 @@ For more information about the Email OAuth 2.0 Proxy, see the README in [simonro
 
 I am paying ***approximately US$4.45 per month***, based on the prices I observed for my own usage in June 2022:
 * $5/year paid upfront for a .link domain registered on Route 53
-   * As of 2022-06-11, the cheapest TLD is .click at $3/year *but it has no WHOIS privacy protection*.
-   * As of 2022-06-11, the second-cheapest TLD is .link at $5/year **and it has WHOIS privacy protection**.
+    * As of 2022-06-11, the cheapest TLD is .click at $3/year *but it has no WHOIS privacy protection*.
+    * As of 2022-06-11, the second-cheapest TLD is .link at $5/year **and it has WHOIS privacy protection**.
 * $0.50/month for a Route 53 hosted zone
 * $3.07/month for a t4g EC2 instance (cheapest instance type)
 * $0.16/month for a 2GB EBS volume
@@ -30,57 +30,62 @@ I am paying ***approximately US$4.45 per month***, based on the prices I observe
 ### Pre-requisites:
 
 * An AWS account, with the [AWS CLI](https://aws.amazon.com/cli/) configured on your local machine.
-   * You must have an AWS profile configured on your computer with admin access to your account, or at a minimum, sufficient privileges to manage the AWS resources used by this Terraform config.
-   * The default profile will be used, although [an alternative profile can be specified](https://github.com/michaelstepner/email-oauth2-proxy-aws/blob/6c31fef7bbc091b1f756ce969fb60bb951786e29/terraform/variables.tf#L5).
+    * You must have an AWS profile configured on your computer with admin access to your account, or at a minimum, sufficient privileges to manage the AWS resources used by this Terraform config.
+    * The default profile will be used, although [an alternative profile can be specified](https://github.com/michaelstepner/email-oauth2-proxy-aws/blob/6c31fef7bbc091b1f756ce969fb60bb951786e29/terraform/variables.tf#L5).
 * A local installation of [Terraform](https://www.terraform.io/downloads).
 
 ### Installation steps:
+
 1. Manually [register a domain using AWS Route 53](https://us-east-1.console.aws.amazon.com/route53/home#DomainRegistration).
-   * It may take a few minutes to a few hours for Amazon to complete the domain registration. There may be manual steps involved, such as validating your email address.
+    * It may take a few minutes to a few hours for Amazon to complete the domain registration. There may be manual steps involved, such as validating your email address.
+
 2. From the AWS Console, navigate to [Route 53: Hosted Zones](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones#). Note down the "Hosted zone ID" for your chosen domain, which you will need in step 5.
+
 3. Clone this repository onto your local computer.
+
 4. Make a copy of the `terraform/config_example.tfvars` file, save it under a new name, and fill in the values with your own configuration settings.
-   * You can consult the readme in [simonrob/email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy#readme) for more details about the `email_oauth2_proxy_config` settings.
-   * There are additional settings that can be configured, which may not be detailed in the example file. The full list of config settings is in [variables.tf](https://github.com/michaelstepner/email-oauth2-proxy-aws/blob/main/terraform/variables.tf).
+    * You can consult the readme in [simonrob/email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy#readme) for more details about the `email_oauth2_proxy_config` settings.
+    * There are additional settings that can be configured, which may not be detailed in the example file. The full list of config settings is in [variables.tf](https://github.com/michaelstepner/email-oauth2-proxy-aws/blob/main/terraform/variables.tf).
+    
 5. Using a terminal, navigate to the `terraform` subdirectory of this repo and run the following commands, replacing ALL_CAPS values with your own:
-```
-terraform init
-terraform import -var-file=YOUR_CONFIG.tfvars aws_route53_zone.primary ZONE_ID_FROM_STEP_2
-```
+    ```
+    terraform init
+    terraform import -var-file=YOUR_CONFIG.tfvars aws_route53_zone.primary ZONE_ID_FROM_STEP_2
+    ```
+
 6. You are now ready to create the AWS server. Using a terminal, in the `terraform` subdirectory of this repo, run the following command. Terraform will prompt you to review the resources that will be created, then type `yes` to confirm.
-```
-terraform apply -var-file=YOUR_CONFIG.tfvars
-```
-7. Using a terminal on your local computer, run `ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP OR DOMAIN_FULL_NAME>`
-   * This will connect to the email-oauth2-proxy server, while also forwarding its port 8080 to your local computer for OAuth2 authentication purposes.
-8. On the remote server you just SSH-ed into, run:
-```
-tmux
-cd email-oauth2-proxy/
-python3 emailproxy.py --no-gui --local-server-auth --config-file personal.config
-```
-9. In your email client, configure SMTP using the server settings:
-   * Outgoing SMTP server: `DOMAIN_FULL_NAME`
-   * Port: `465`
-   * Username: `YOUR_EMAIL_ADDRESS`
-   * Password: `ANY_STRING_OF_YOUR_CHOICE`
-10. When your email client attempts to connect to the SMTP server, you should see an authentication request appear in the email-oauth2-proxy server log via your SSH session. It will look like the text below. Copy and paste the URL from your terminal into your local browser, then complete the authentication prompts.
-```
-YYYY-MM-DD HH:MM:SS: Email OAuth 2.0 Proxy Local server auth mode: please authorise a request for account your.email@example.com
-YYYY-MM-DD HH:MM:SS: Please visit the following URL to authenticate account your.email@example.com: URL
-```
-11. After you've completed the authentication prompts in your local browser, you should see the successful authentication appear in the email-oauth2-proxy server log via your SSH session. It will look like the text below. At this point you can close your local browser tab. Your email client should be able to successfully connect to the SMTP server and send outgoing emails. 
-```
-YYYY-MM-DD HH:MM:SS: SMTP ('1.2.3.4', 5678) [ Successfully authenticated SMTP connection - releasing session ]
-```
-12. In your terminal connected to the remote server, leave the email-oauth2-proxy server running while detaching from the tmux session by typing `Ctrl`+`b` then `d`. You can now log out of the remote server. It will continue running the email-oauth2-proxy server in the background.
+    ```
+    terraform apply -var-file=YOUR_CONFIG.tfvars
+    ```
+
+7. Using a terminal on your local computer, run `ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP OR DOMAIN_FULL_NAME> journalctl --follow -u emailproxy`
+    * This will display a live view of the email-oauth2-proxy logs, while also forwarding port 8080 on the server to your local computer for OAuth2 authentication purposes.
+
+8. In your email client, configure SMTP using the server settings:
+    * Outgoing SMTP server: `DOMAIN_FULL_NAME`
+    * Port: `465`
+    * Username: `YOUR_EMAIL_ADDRESS`
+    * Password: `ANY_STRING_OF_YOUR_CHOICE`
+
+9. When your email client attempts to connect to the SMTP server, you should see an authentication request appear in the email-oauth2-proxy server log via your SSH session. It will look like the text below. Copy and paste the URL from your terminal into your local browser, then complete the authentication prompts.
+    ```
+    Email OAuth 2.0 Proxy Local server auth mode: please authorise a request for account your.email@example.com
+    Please visit the following URL to authenticate account your.email@example.com: URL
+    ```
+
+10. After you've completed the authentication prompts in your local browser, you should see the successful authentication appear in the email-oauth2-proxy server log via your SSH session. It will look like the text below. At this point you can close your local browser tab. Your email client should be able to successfully connect to the SMTP server and send outgoing emails.
+    ```
+    SMTP ('1.2.3.4', 5678) [ Successfully authenticated SMTP connection - releasing session ]
+    ```
+
+11. You can now log out of the remote server by typing `Ctrl`+`c` to end your SSH session. It will continue running the email-oauth2-proxy server in the background.
 
 ### Limitations
 
 * Your TLS certificate from Let's Encrypt will expire automatically after 90 days.
-* After 60 to 90 days, you can renew the certificate by restarting the installation steps from Step 6 (`terraform apply ...`).
-   * If any settings (such as the TLS certificate) have changed, this will destroy the existing server and create a brand new server.
-   * You will therefore need to proceed through all the subsequent installation steps.
+* After 60 to 90 days, you can renew the certificate by re-running installation step 6 (`terraform apply ...`).
+    * If any settings (such as the TLS certificate) have changed, this will destroy the existing server and create a brand new server.
+    * You should not need to re-authenticate (installation steps 7-11), because your OAuth 2.0 tokens are stored persistently in AWS Secrets Manager. Your authentication is not lost when the server is destroyed and re-created.
 
 ## Contributing
 
@@ -94,7 +99,7 @@ If you have a **feature request**, it is unlikely that I will be able to impleme
 
 - [x] [Use certificate](https://github.com/simonrob/email-oauth2-proxy/blob/b26c7b4d25f431e2a1ea12a30667cb9746401211/emailproxy.config#L28) to secure the connection between email client and proxy server
 - [x] Add support for storing OAuth2 tokens using a secrets manager (e.g. AWS Secrets Manager) instead of locally, so it persists across servers
-- [ ] [Automatically launch](https://github.com/simonrob/email-oauth2-proxy/issues/2#issuecomment-839713677) `email-oauth2-proxy` and configure OAuth2 token without SSHing into the server
+- [x] [Automatically launch](https://github.com/simonrob/email-oauth2-proxy/issues/2#issuecomment-839713677) `email-oauth2-proxy` on server via `systemctl`
 - [ ] Add support for automatically rotating TLS certificate, which expires automatically after 90 days
 
 ## License
