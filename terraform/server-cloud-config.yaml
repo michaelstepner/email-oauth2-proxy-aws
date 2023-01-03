@@ -9,7 +9,6 @@ ssh_keys:
 # Install packages
 packages:
   - nano
-  - tmux
   - git
   - python3-pip
   - iptables
@@ -28,6 +27,21 @@ write_files:
     encoding: base64
     content: ${base64encode(cert_privkey)}
     permissions: '0640'
+  - path: /etc/systemd/system/emailproxy.service
+    owner: root:root
+    permissions: '0755'
+    content: |
+      [Unit]
+      Description=Email OAuth 2.0 Proxy
+
+      [Service]
+      User=ec2-user
+      WorkingDirectory=/home/ec2-user/email-oauth2-proxy
+      ExecStart=python3 emailproxy.py --no-gui --local-server-auth --config-file personal.config
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
 
 # Run commands
 runcmd:
@@ -67,3 +81,6 @@ runcmd:
     region = ${aws_region}
     EOL
   - chown -R ec2-user:ec2-user /home/ec2-user/.aws/
+  # Launch email-oauth2-proxy
+  - systemctl daemon-reload
+  - systemctl enable emailproxy.service --now
