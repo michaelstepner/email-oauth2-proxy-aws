@@ -32,6 +32,9 @@ timezone = "America/New_York"
 
 # Config file for email-oauth2-proxy
 # For documentation see: https://github.com/simonrob/email-oauth2-proxy
+# In your personal .tfvars file:
+#   - values in *** three asterisks *** should be manually replaced
+#   - values in {{double braces}} should be left as-is, and will be automatically populated on the server
 email_oauth2_proxy_config = <<-EOT
 [SMTP-1465]
 server_address = smtp.office365.com
