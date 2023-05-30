@@ -58,8 +58,10 @@ I am paying ***approximately US$4.55 per month***, based on the prices I observe
     terraform apply -var-file=YOUR_CONFIG.tfvars
     ```
 
-7. Using a terminal on your local computer, run `ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP OR DOMAIN_FULL_NAME> journalctl --follow -u emailproxy`
-    * This will display a live view of the email-oauth2-proxy logs, while also forwarding port 8080 on the server to your local computer for OAuth2 authentication purposes.
+7. Using a terminal on your local computer, run the following command. This will display a live view of the email-oauth2-proxy logs, while also forwarding port 8080 on the server to your local computer for OAuth2 authentication purposes.
+    ```
+    ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP OR DOMAIN_FULL_NAME> journalctl --follow -u emailproxy
+    ```
 
 8. In your email client, configure SMTP using the server settings:
     * Outgoing SMTP server: `DOMAIN_FULL_NAME`
@@ -75,7 +77,7 @@ I am paying ***approximately US$4.55 per month***, based on the prices I observe
 
 10. After you've completed the authentication prompts in your local browser, you should see the successful authentication appear in the email-oauth2-proxy server log via your SSH session. It will look like the text below. At this point you can close your local browser tab. Your email client should be able to successfully connect to the SMTP server and send outgoing emails.
     ```
-    SMTP ('1.2.3.4', 5678) [ Successfully authenticated SMTP connection - releasing session ]
+    SMTP ('1.2.3.4', 5678; your.email@example.com) [ Successfully authenticated SMTP connection - releasing session ]
     ```
 
 11. You can now log out of the remote server by typing `Ctrl`+`c` to end your SSH session. It will continue running the email-oauth2-proxy server in the background.
