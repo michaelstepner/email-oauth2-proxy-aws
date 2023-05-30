@@ -49,7 +49,6 @@ permission_url = https://login.microsoftonline.com/common/oauth2/v2.0/authorize
 token_url = https://login.microsoftonline.com/common/oauth2/v2.0/token
 oauth2_scope = https://outlook.office365.com/IMAP.AccessAsUser.All https://outlook.office365.com/SMTP.Send offline_access
 redirect_uri = http://localhost:8080
-aws_secret = {{aws_secret_arn}}
 client_id = *** your client id here ***
 client_secret = *** your client secret here ***
 EOT

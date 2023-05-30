@@ -37,7 +37,7 @@ write_files:
       [Service]
       User=ec2-user
       WorkingDirectory=/home/ec2-user/email-oauth2-proxy
-      ExecStart=python3 emailproxy.py --no-gui --local-server-auth --config-file personal.config
+      ExecStart=python3 emailproxy.py --no-gui --local-server-auth --config-file personal.config --cache-store aws:${email_oauth2_aws_secret_arn}
       Restart=always
 
       [Install]
@@ -53,13 +53,13 @@ runcmd:
   # Install email-oauth2-proxy
   - sudo -u ec2-user git clone --depth 1 --branch ${email_oauth2_proxy_version} ${email_oauth2_proxy_repo} /home/ec2-user/email-oauth2-proxy
   - sudo -u ec2-user rm -rf /home/ec2-user/email-oauth2-proxy/.git
-  - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements-aws-secrets.txt
+  - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements-no-gui.txt
+  - sudo -u ec2-user python3 -m pip install boto3
   # Configure email-oauth2-proxy
   - mv /tmp/personal.config /home/ec2-user/email-oauth2-proxy/personal.config
   - mv /tmp/fullchain.pem /home/ec2-user/email-oauth2-proxy/fullchain.pem
   - mv /tmp/privkey.pem /home/ec2-user/email-oauth2-proxy/privkey.pem
   - sed -i "s/{{private_ip}}/$(hostname -I)/g" /home/ec2-user/email-oauth2-proxy/personal.config
-  - sed -i "s/{{aws_secret_arn}}/${email_oauth2_aws_secret_arn}/g" /home/ec2-user/email-oauth2-proxy/personal.config
   - chown ec2-user:ec2-user /home/ec2-user/email-oauth2-proxy/personal.config
   - chown root:ec2-user /home/ec2-user/email-oauth2-proxy/fullchain.pem
   - chown root:ec2-user /home/ec2-user/email-oauth2-proxy/privkey.pem
