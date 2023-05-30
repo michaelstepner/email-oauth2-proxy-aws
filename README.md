@@ -104,7 +104,7 @@ If you have a **feature request**, it is unlikely that I will be able to impleme
 
 ## License
 
-All of the files in this repository are released to the public domain under a [CC0 license](https://creativecommons.org/publicdomain/zero/1.0/) to permit the widest possible reuse.
+All of the files in this repository are open source and can be freely reused, as described in the [0BSD license](https://choosealicense.com/licenses/0bsd/).
 
 ## Acknowledgements
 
