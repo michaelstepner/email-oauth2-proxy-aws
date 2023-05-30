@@ -16,7 +16,7 @@ For more information about the Email OAuth 2.0 Proxy, see the README in [simonro
 
 **THIS SOFTWARE COMES WITH NO WARRANTY OR GUARANTEE REGARDING THE PRICE OF YOUR CLOUD USAGE.** The price you face is determined by AWS, and may be higher or lower depending on your Free Tier availability, email client settings, pricing changes by Amazon, etc.
 
-I am paying ***approximately US$4.45 per month***, based on the prices I observed for my own usage in June 2022:
+I am paying ***approximately US$4.55 per month***, based on the prices I observed for my own usage in June 2022:
 * $5/year paid upfront for a .link domain registered on Route 53
     * As of 2022-06-11, the cheapest TLD is .click at $3/year *but it has no WHOIS privacy protection*.
     * As of 2022-06-11, the second-cheapest TLD is .link at $5/year **and it has WHOIS privacy protection**.
@@ -108,4 +108,4 @@ All of the files in this repository are open source and can be freely reused, as
 
 ## Acknowledgements
 
-This project only exists thanks to [Simon Robinson](https://github.com/simonrob)'s excellent work on [email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy). His generous answers in the Issues on that project were invaluable in the development of this project.
+This project only exists thanks to [Simon Robinson](https://github.com/simonrob)'s excellent work on [email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy). His generous answers in the Issues on that project and implementation of [PR 114](https://github.com/simonrob/email-oauth2-proxy/pull/114) were invaluable in the development of this project.
