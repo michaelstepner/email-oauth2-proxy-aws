@@ -19,6 +19,42 @@ resource "aws_route53_record" "app_server" {
 }
 
 #-------------------------------------------------------------------------------
+# AWS Secrets Management
+#-------------------------------------------------------------------------------
+
+resource "aws_secretsmanager_secret" "oauth2_tokens" {
+  name                    = "email_oauth2_proxy_tokens"
+  recovery_window_in_days = 0
+}
+
+resource "aws_iam_user" "user_email_oauth2_proxy" {
+  name = "email_oauth2_proxy"
+}
+
+resource "aws_iam_access_key" "user_email_oauth2_proxy" {
+  user = aws_iam_user.user_email_oauth2_proxy.name
+}
+
+resource "aws_iam_user_policy" "oauth2_tokens_readwrite" {
+  name = "email_oauth2_tokens_readwrite"
+  user = aws_iam_user.user_email_oauth2_proxy.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:PutSecretValue",
+        ]
+        Resource = aws_secretsmanager_secret.oauth2_tokens.arn
+      },
+    ]
+  })
+}
+
+#-------------------------------------------------------------------------------
 # Let's Encrypt Certificate
 #-------------------------------------------------------------------------------
 
@@ -59,7 +95,7 @@ data "aws_ami" "app_server" {
 
   filter {
     name   = "name"
-    values = ["al2022-ami-minimal-*"]
+    values = ["al2023-ami-minimal-*"]
   }
 
   filter {
@@ -104,13 +140,18 @@ resource "aws_instance" "app_server" {
   user_data = templatefile(
     "server-cloud-config.yaml",
     {
-      timezone                   = var.timezone
-      email_oauth2_proxy_version = var.email_oauth2_proxy_version
-      email_oauth2_proxy_config  = var.email_oauth2_proxy_config
-      cert_fullchain             = "${acme_certificate.certificate.certificate_pem}${acme_certificate.certificate.issuer_pem}"
-      cert_privkey               = acme_certificate.certificate.private_key_pem
-      ssh_host_ed25519_privkey   = tls_private_key.ssh_host_ed25519_key.private_key_openssh
-      ssh_host_ed25519_pubkey    = tls_private_key.ssh_host_ed25519_key.public_key_openssh
+      timezone                    = var.timezone
+      email_oauth2_proxy_repo     = var.email_oauth2_proxy_repo
+      email_oauth2_proxy_version  = var.email_oauth2_proxy_version
+      email_oauth2_proxy_config   = var.email_oauth2_proxy_config
+      email_oauth2_aws_secret_arn = aws_secretsmanager_secret.oauth2_tokens.arn
+      cert_fullchain              = "${acme_certificate.certificate.certificate_pem}${acme_certificate.certificate.issuer_pem}"
+      cert_privkey                = acme_certificate.certificate.private_key_pem
+      ssh_host_ed25519_privkey    = tls_private_key.ssh_host_ed25519_key.private_key_openssh
+      ssh_host_ed25519_pubkey     = tls_private_key.ssh_host_ed25519_key.public_key_openssh
+      aws_access_key_id           = aws_iam_access_key.user_email_oauth2_proxy.id
+      aws_secret_access_key       = aws_iam_access_key.user_email_oauth2_proxy.secret
+      aws_region                  = var.aws_region
     }
   )
   user_data_replace_on_change = true

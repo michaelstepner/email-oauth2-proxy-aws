@@ -9,7 +9,6 @@ ssh_keys:
 # Install packages
 packages:
   - nano
-  - tmux
   - git
   - python3-pip
   - iptables
@@ -28,6 +27,21 @@ write_files:
     encoding: base64
     content: ${base64encode(cert_privkey)}
     permissions: '0640'
+  - path: /etc/systemd/system/emailproxy.service
+    owner: root:root
+    permissions: '0755'
+    content: |
+      [Unit]
+      Description=Email OAuth 2.0 Proxy
+
+      [Service]
+      User=ec2-user
+      WorkingDirectory=/home/ec2-user/email-oauth2-proxy
+      ExecStart=python3 emailproxy.py --no-gui --local-server-auth --config-file personal.config --cache-store aws:${email_oauth2_aws_secret_arn}
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
 
 # Run commands
 runcmd:
@@ -37,9 +51,10 @@ runcmd:
   # Redirect port 465 to port 1465, since only root can host on ports < 1024
   - iptables -A PREROUTING -t nat -p tcp --dport 465 -j REDIRECT --to-port 1465
   # Install email-oauth2-proxy
-  - sudo -u ec2-user git clone --depth 1 --branch ${email_oauth2_proxy_version} https://github.com/simonrob/email-oauth2-proxy.git /home/ec2-user/email-oauth2-proxy
+  - sudo -u ec2-user git clone --depth 1 --branch ${email_oauth2_proxy_version} ${email_oauth2_proxy_repo} /home/ec2-user/email-oauth2-proxy
   - sudo -u ec2-user rm -rf /home/ec2-user/email-oauth2-proxy/.git
   - sudo -u ec2-user python3 -m pip install -r /home/ec2-user/email-oauth2-proxy/requirements-no-gui.txt
+  - sudo -u ec2-user python3 -m pip install boto3
   # Configure email-oauth2-proxy
   - mv /tmp/personal.config /home/ec2-user/email-oauth2-proxy/personal.config
   - mv /tmp/fullchain.pem /home/ec2-user/email-oauth2-proxy/fullchain.pem
@@ -48,7 +63,24 @@ runcmd:
   - chown ec2-user:ec2-user /home/ec2-user/email-oauth2-proxy/personal.config
   - chown root:ec2-user /home/ec2-user/email-oauth2-proxy/fullchain.pem
   - chown root:ec2-user /home/ec2-user/email-oauth2-proxy/privkey.pem
-  # Command to run:
-  #  ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP>
-  #     tmux
-  #     PYSTRAY_BACKEND=dummy python3 /home/ec2-user/email-oauth2-proxy/emailproxy.py --no-gui --local-server-auth --config-file /home/ec2-user/email-oauth2-proxy/personal.config
+  # Configure AWS credentials
+  - mkdir -p /home/ec2-user/.aws
+  - touch /home/ec2-user/.aws/credentials
+  - chmod 600 /home/ec2-user/.aws/credentials
+  - |
+    cat > /home/ec2-user/.aws/credentials <<EOL
+    [default]
+    aws_access_key_id = ${aws_access_key_id}
+    aws_secret_access_key = ${aws_secret_access_key}
+    EOL
+  - touch /home/ec2-user/.aws/config
+  - chmod 600 /home/ec2-user/.aws/config
+  - |
+    cat > /home/ec2-user/.aws/config <<EOL
+    [default]
+    region = ${aws_region}
+    EOL
+  - chown -R ec2-user:ec2-user /home/ec2-user/.aws/
+  # Launch email-oauth2-proxy
+  - systemctl daemon-reload
+  - systemctl enable emailproxy.service --now
