@@ -95,7 +95,7 @@ data "aws_ami" "app_server" {
 
   filter {
     name   = "name"
-    values = ["al2022-ami-minimal-*"]
+    values = ["al2023-ami-minimal-*"]
   }
 
   filter {
