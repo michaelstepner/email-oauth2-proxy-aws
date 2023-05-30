@@ -91,7 +91,7 @@ data "aws_ami" "app_server" {
 
   filter {
     name   = "name"
-    values = ["al2022-ami-minimal-*"]
+    values = ["al2023-ami-minimal-*"]
   }
 
   filter {
@@ -140,7 +140,7 @@ resource "aws_instance" "app_server" {
       email_oauth2_proxy_repo     = var.email_oauth2_proxy_repo
       email_oauth2_proxy_version  = var.email_oauth2_proxy_version
       email_oauth2_proxy_config   = var.email_oauth2_proxy_config
-      email_oauth2_aws_secret_arn = ""
+      email_oauth2_aws_secret_arn = "emailproxy_test_secret"
       cert_fullchain              = "${acme_certificate.certificate.certificate_pem}${acme_certificate.certificate.issuer_pem}"
       cert_privkey                = acme_certificate.certificate.private_key_pem
       ssh_host_ed25519_privkey    = tls_private_key.ssh_host_ed25519_key.private_key_openssh

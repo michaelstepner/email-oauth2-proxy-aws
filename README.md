@@ -16,7 +16,7 @@ For more information about the Email OAuth 2.0 Proxy, see the README in [simonro
 
 **THIS SOFTWARE COMES WITH NO WARRANTY OR GUARANTEE REGARDING THE PRICE OF YOUR CLOUD USAGE.** The price you face is determined by AWS, and may be higher or lower depending on your Free Tier availability, email client settings, pricing changes by Amazon, etc.
 
-I am paying ***approximately US$4.45 per month***, based on the prices I observed for my own usage in June 2022:
+I am paying ***approximately US$4.55 per month***, based on the prices I observed for my own usage in June 2022:
 * $5/year paid upfront for a .link domain registered on Route 53
     * As of 2022-06-11, the cheapest TLD is .click at $3/year *but it has no WHOIS privacy protection*.
     * As of 2022-06-11, the second-cheapest TLD is .link at $5/year **and it has WHOIS privacy protection**.
@@ -58,8 +58,10 @@ I am paying ***approximately US$4.45 per month***, based on the prices I observe
     terraform apply -var-file=YOUR_CONFIG.tfvars
     ```
 
-7. Using a terminal on your local computer, run `ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP OR DOMAIN_FULL_NAME> journalctl --follow -u emailproxy`
-    * This will display a live view of the email-oauth2-proxy logs, while also forwarding port 8080 on the server to your local computer for OAuth2 authentication purposes.
+7. Using a terminal on your local computer, run the following command. This will display a live view of the email-oauth2-proxy logs, while also forwarding port 8080 on the server to your local computer for OAuth2 authentication purposes.
+    ```
+    ssh -L 8080:127.0.0.1:8080 ec2-user@<PUBLIC_IP OR DOMAIN_FULL_NAME> journalctl --follow -u emailproxy
+    ```
 
 8. In your email client, configure SMTP using the server settings:
     * Outgoing SMTP server: `DOMAIN_FULL_NAME`
@@ -75,7 +77,7 @@ I am paying ***approximately US$4.45 per month***, based on the prices I observe
 
 10. After you've completed the authentication prompts in your local browser, you should see the successful authentication appear in the email-oauth2-proxy server log via your SSH session. It will look like the text below. At this point you can close your local browser tab. Your email client should be able to successfully connect to the SMTP server and send outgoing emails.
     ```
-    SMTP ('1.2.3.4', 5678) [ Successfully authenticated SMTP connection - releasing session ]
+    SMTP ('1.2.3.4', 5678; your.email@example.com) [ Successfully authenticated SMTP connection - releasing session ]
     ```
 
 11. You can now log out of the remote server by typing `Ctrl`+`c` to end your SSH session. It will continue running the email-oauth2-proxy server in the background.
@@ -104,8 +106,8 @@ If you have a **feature request**, it is unlikely that I will be able to impleme
 
 ## License
 
-All of the files in this repository are released to the public domain under a [CC0 license](https://creativecommons.org/publicdomain/zero/1.0/) to permit the widest possible reuse.
+All of the files in this repository are open source and can be freely reused, as described in the [0BSD license](https://choosealicense.com/licenses/0bsd/).
 
 ## Acknowledgements
 
-This project only exists thanks to [Simon Robinson](https://github.com/simonrob)'s excellent work on [email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy). His generous answers in the Issues on that project were invaluable in the development of this project.
+This project only exists thanks to [Simon Robinson](https://github.com/simonrob)'s excellent work on [email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy). His generous answers in the Github Issues on that project, along with his review and contributions to [PR 114](https://github.com/simonrob/email-oauth2-proxy/pull/114), were invaluable in the development of this project.
