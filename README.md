@@ -1,4 +1,4 @@
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 This repository contains a Terraform configuration for automatically launching and configuring an AWS server to run [simonrob/email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy). The server is configured to respond to SMTP queries on port 465 with a TLS certificate from Let's Encrypt. This is not a fully automated process, as detailed in the installation instructions below.
 
