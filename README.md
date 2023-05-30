@@ -110,4 +110,4 @@ All of the files in this repository are open source and can be freely reused, as
 
 ## Acknowledgements
 
-This project only exists thanks to [Simon Robinson](https://github.com/simonrob)'s excellent work on [email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy). His generous answers in the Issues on that project and implementation of [PR 114](https://github.com/simonrob/email-oauth2-proxy/pull/114) were invaluable in the development of this project.
+This project only exists thanks to [Simon Robinson](https://github.com/simonrob)'s excellent work on [email-oauth2-proxy](https://github.com/simonrob/email-oauth2-proxy). His generous answers in the Github Issues on that project, along with his review and contributions to [PR 114](https://github.com/simonrob/email-oauth2-proxy/pull/114), were invaluable in the development of this project.
