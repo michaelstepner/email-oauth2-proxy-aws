@@ -102,7 +102,7 @@ If you have a **feature request**, it is unlikely that I will be able to impleme
 - [x] [Use certificate](https://github.com/simonrob/email-oauth2-proxy/blob/b26c7b4d25f431e2a1ea12a30667cb9746401211/emailproxy.config#L28) to secure the connection between email client and proxy server
 - [x] [Add support for storing OAuth2 tokens using a secrets manager](https://github.com/simonrob/email-oauth2-proxy/pull/114) (e.g. AWS Secrets Manager) instead of locally, so it persists across servers
 - [x] [Automatically launch](https://github.com/simonrob/email-oauth2-proxy/issues/2#issuecomment-839713677) `email-oauth2-proxy` on server via `systemctl`
-- [ ] Add support for automatically rotating TLS certificate, which expires automatically after 90 days
+- [ ] Add support for [automatically rotating TLS certificate](https://certbot-dns-route53.readthedocs.io/en/stable/#), which expires automatically after 90 days
 
 ## License
 
