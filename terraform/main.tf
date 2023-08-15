@@ -119,7 +119,7 @@ resource "aws_key_pair" "ssh_login" {
 
 resource "aws_eip" "app_server" {
   instance = aws_instance.app_server.id
-  vpc      = true
+  domain   = "vpc"
 }
 
 resource "aws_instance" "app_server" {
